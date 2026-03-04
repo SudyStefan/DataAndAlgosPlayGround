@@ -4,7 +4,17 @@ export interface Sort {
 
 export class InsertionSort implements Sort {
   sort = (unsortedList: number[]): number[] => {
-    return [];
+    const A = structuredClone(unsortedList);
+    for (let i = 1; i < A.length; i++) {
+      let key = A[i];
+      let j = i - 1;
+      while (A[j] > key && j > 0 ) {
+        A[j+1] = A[j];
+        j--;
+      }
+      A[j+1] = key;
+    }
+    return A;
   }
 }
 
