@@ -1,26 +1,14 @@
-import random
-import math
-
-loopcount = 0
-list_length = 100
-A = [i for i in range(list_length)]
-random.shuffle(A)
-print(f"n^2: {list_length**2}")
-print(f"n: {list_length}")
-print(f"n log(n): {list_length * math.log(list_length)}")
-print(f"log(n): {math.log(list_length)}")
-
-count = 1
-while count != len(A):
-  sorted = True
-  for i in range(0, len(A) - count):
-    if A[i] > A[i+1]:
-      temp = A[i+1]
-      A[i+1] = A[i]
-      A[i] = temp
-    i += 1
-    loopcount += 1
-  count += 1
-
-print(f"loops: {loopcount}")
-print(A)
+def sort(list_to_sort: list[int]) -> tuple[list[int], int]:
+  loopcount = 0
+  sorted_count = 1
+  while sorted_count != len(list_to_sort):
+    for i in range(0, len(list_to_sort) - sorted_count):
+      if list_to_sort[i] > list_to_sort[i+1]:
+        temp = list_to_sort[i+1]
+        list_to_sort[i+1] = list_to_sort[i]
+        list_to_sort[i] = temp
+      i += 1
+      loopcount += 1
+    sorted_count += 1
+  
+  return list_to_sort, loopcount

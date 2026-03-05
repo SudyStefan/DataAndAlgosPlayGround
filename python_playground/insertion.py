@@ -1,23 +1,12 @@
-import random
-import math
+def sort(list_to_sort: list[int]) -> tuple[list[int], int]:
+    loopcount = 0
+    for i in range(1, len(list_to_sort)):
+        key = list_to_sort[i]
+        j = i - 1
+        while list_to_sort[j] > key and j >= 0:
+            list_to_sort[j + 1] = list_to_sort[j]
+            j -= 1
+            loopcount += 1
+        list_to_sort[j + 1] = key
 
-loopcount = 0
-list_length = 100
-A = [i for i in range(list_length)]
-random.shuffle(A)
-print(f"n^2: {list_length**2}")
-print(f"n: {list_length}")
-print(f"n log(n): {list_length * math.log(list_length)}")
-print(f"log(n): {math.log(list_length)}")
-
-for i in range(1, len(A)):
-  key = A[i]
-  j = i - 1
-  while A[j] > key and j >= 0:
-    A[j + 1] = A[j]
-    j -= 1
-    loopcount += 1
-  A[j + 1] = key
-
-print(f"loops: {loopcount}")
-print(A)
+    return list_to_sort, loopcount
