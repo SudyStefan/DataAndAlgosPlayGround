@@ -1,0 +1,16 @@
+{
+  "sites": [
+    {
+      "name": "Snek",
+      "description": "Snake Game made in TypeScript",
+      "logoPath": "./snek/logo.svg",
+      "indexPath": "./snek/index.html"
+    },
+    {
+      "name": "Sort Visualizer",
+      "description": "Charts the runtime of various Sorting Algorithms against each other",
+      "logoPath": "./algo_visualizer/logo.svg",
+      "indexPath": "./algo_visualizer/index.html"
+    }
+  ]
+}

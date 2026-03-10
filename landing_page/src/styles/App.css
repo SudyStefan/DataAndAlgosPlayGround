@@ -1,0 +1,117 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.siteContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.siteCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #525252;
+  border-radius: 12px;
+  border: 1px solid #e1e4e8;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 20px;
+}
+
+.siteCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.siteHeader {
+  display: flex;
+  min-height: 20%;
+}
+
+.siteHeader h1 {
+  margin: 0;
+  padding: 0;
+}
+
+.siteBody {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.siteLogo {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+}
+
+.siteDesc {
+  padding-left: 10px;
+  display: flex;
+  justify-content: start;
+  text-align: start;
+  width: 50%;
+}
