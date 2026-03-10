@@ -12,6 +12,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import AlgoItem from "./AlgoItem";
 import { runBenchmarks, type BenchmarkDataPoint } from "../algos/runner";
 import PerformanceChart from "./PerformanceChart";
+import Merge from "../algos/merge";
 
 export const App = () => {
   const [availableAlgos, setAvailableAlgos] = useState<SortAlgorithm[]>([]);
@@ -25,7 +26,7 @@ export const App = () => {
   const activeItem = [...availableAlgos, ...selectedAlgos].find((a) => a.name === activeId);
 
   useEffect(() => {
-    setAvailableAlgos([new Bubble(), new Insertion(), new Selection(), new Quick()]);
+    setAvailableAlgos([new Bubble(), new Insertion(), new Selection(), new Quick(), new Merge()]);
   }, []);
 
   const moveAllToSelected = () => {
