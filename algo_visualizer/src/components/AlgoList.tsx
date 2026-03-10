@@ -15,9 +15,8 @@ const AlgoList = ({ algos, listId, listTitle }: AlgoListProps) => {
   });
 
   return (
-    <div ref={setNodeRef} className="algoList">
+    <div ref={setNodeRef}>
       <h2 className="algoListHeader">{listTitle}</h2>
-
       <SortableContext id={listId} items={algos.map((algo) => algo.name)} strategy={verticalListSortingStrategy}>
         {algos.map((algo) => (
           <AlgoItem key={algo.name} algo={algo} />

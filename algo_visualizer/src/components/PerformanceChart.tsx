@@ -1,32 +1,48 @@
-import type { BenchmarkResult } from "../algos/runner";
+import type { BenchmarkDataPoint } from "../algos/runner";
 import type SortAlgorithm from "../algos/SortAlgorithm";
-import "../styles/ResultChart.css";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer, ComposedChart, Tooltip } from "recharts";
 
 export type PerformanceChartProps = {
-  data: BenchmarkResult[];
+  data: BenchmarkDataPoint[];
   algos: SortAlgorithm[];
 };
 
 const PerformanceChart = ({ data, algos }: PerformanceChartProps) => {
   return (
     <div className="chartContainer">
-      <ResponsiveContainer>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="n" label={{ value: "Array Size (n)", position: "insideBottom", offset: -5 }} />
-          <YAxis
-            scale="auto" // Change to "log" if the gap between Bubble and Quick is too massive
-            domain={["auto", "auto"]}
-            label={{ value: "Time (ms)", angle: -90, position: "insideLeft" }}
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+          <XAxis dataKey="n" type="number" domain={["dataMin", "dataMax"]} />
+          <YAxis scale="auto" domain={[0, "auto"]} allowDataOverflow={true} tickFormatter={(value) => `${value}ms`} />
+          <Legend
+            verticalAlign="top"
+            layout="vertical"
+            iconType="circle"
+            wrapperStyle={{
+              position: "absolute",
+              fontSize: "25px",
+              left: "150px",
+              top: "250px",
+              zIndex: 5,
+              borderRadius: "6px",
+              padding: "5px 20px",
+              backgroundColor: "#323232"
+            }}
           />
-          <Tooltip />
-          <Legend />
-          {/* Dynamically create a line for each selected algorithm */}
           {algos.map((algo) => (
-            <Line key={algo.name} type="monotone" dataKey={algo.name} stroke={algo.chartColor} strokeWidth={2} />
+            <Line
+              key={algo.name}
+              type="monotone"
+              dataKey={algo.name}
+              stroke={algo.chartColor}
+              strokeWidth={3}
+              dot={false}
+              isAnimationActive={false}
+            />
           ))}
-        </LineChart>
+          <Tooltip wrapperStyle={{ zIndex: 6 }} />
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );

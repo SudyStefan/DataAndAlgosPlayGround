@@ -10,20 +10,33 @@ import { DndContext, DragOverlay, closestCenter, defaultDropAnimationSideEffects
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import AlgoItem from "./AlgoItem";
-import { runBenchmarks, type BenchmarkResult } from "../algos/runner";
+import { runBenchmarks, type BenchmarkDataPoint } from "../algos/runner";
 import PerformanceChart from "./PerformanceChart";
 
 export const App = () => {
   const [availableAlgos, setAvailableAlgos] = useState<SortAlgorithm[]>([]);
   const [selectedAlgos, setSelectedAlgos] = useState<SortAlgorithm[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [benchmarkData, setBenchmarkData] = useState<BenchmarkResult[]>([]);
+  const [benchmarkData, setBenchmarkData] = useState<BenchmarkDataPoint[]>([]);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [maxN, setMaxN] = useState<number>(10000);
+  const [intervals, setIntervals] = useState<number>(10);
+
   const activeItem = [...availableAlgos, ...selectedAlgos].find((a) => a.name === activeId);
 
   useEffect(() => {
     setAvailableAlgos([new Bubble(), new Insertion(), new Selection(), new Quick()]);
   }, []);
+
+  const moveAllToSelected = () => {
+    setSelectedAlgos((prev) => [...prev, ...availableAlgos]);
+    setAvailableAlgos([]);
+  };
+
+  const moveAllToAvailable = () => {
+    setAvailableAlgos((prev) => [...prev, ...selectedAlgos]);
+    setSelectedAlgos([]);
+  };
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
@@ -84,21 +97,28 @@ export const App = () => {
     setActiveId(null);
   };
 
-  const handleRunBenchmark = () => {
-    setIsCalculating(true);
+  const handleRunBenchmark = async () => {
+    if (intervals <= 0 || maxN <= 0) {
+      alert("Please enter values greater than zero.");
+      return;
+    }
 
-    setTimeout(() => {
-      const results = runBenchmarks(selectedAlgos);
-      setBenchmarkData(results);
-      setIsCalculating(false);
-    }, 100);
+    setIsCalculating(true);
+    setBenchmarkData([]);
+
+    // Pass the user-defined values into the runner
+    await runBenchmarks(selectedAlgos, maxN, intervals, (newDataPoint) => {
+      setBenchmarkData((prev) => [...prev, newDataPoint]);
+    });
+
+    setIsCalculating(false);
   };
 
   return (
     <>
-      <h1>Algo Visualizer</h1>
       <div className="appRoot">
-        <div>
+        <div className="initContainer">
+          <h1 style={{ margin: "5px" }}>Algo Visualizer</h1>
           <button
             onClick={handleRunBenchmark}
             disabled={isCalculating || selectedAlgos.length === 0}
@@ -106,9 +126,23 @@ export const App = () => {
           >
             {isCalculating ? "Calculating..." : "Run Benchmarks"}
           </button>
+          <div className="controls">
+            <div className="controlBlock">
+              <label>Max N:</label>
+              <input type="number" value={maxN} onChange={(e) => setMaxN(Number(e.target.value))} />
+            </div>
+            <div className="controlBlock">
+              <label>Intervals:</label>
+              <input type="number" value={intervals} onChange={(e) => setIntervals(Number(e.target.value))} />
+            </div>
+          </div>
           <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
             <div className="algoLists">
               <AlgoList algos={availableAlgos} listId="available" listTitle="Available Algorithms"></AlgoList>
+              <div className="algoListTransferButtons">
+                <button onClick={moveAllToSelected}>{">"}</button>
+                <button onClick={moveAllToAvailable}>{"<"}</button>
+              </div>
               <AlgoList algos={selectedAlgos} listId="selected" listTitle="Selected Algorithms"></AlgoList>
             </div>
 

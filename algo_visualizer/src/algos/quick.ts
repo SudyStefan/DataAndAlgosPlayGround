@@ -6,29 +6,31 @@ export default class Quick implements SortAlgorithm {
   readonly expectedBigO: BigO = BigO.N_LOG_N;
   readonly chartColor: string = "#3b82f6";
 
-  private partition = (listToSort: number[], low: number, high: number): number => {
-    const pivot = listToSort[high];
+  private partition = (list: number[], low: number, high: number): number => {
+    const pivot = list[Math.floor((low + high) / 2)];
     let i = low - 1;
+    let j = high + 1;
 
-    for (let j = low; j < high; j++) {
-      if (listToSort[j] < pivot) {
+    while (true) {
+      do {
         i++;
-        this.swap(listToSort, i, j);
-      }
+      } while (list[i] < pivot);
+      do {
+        j--;
+      } while (list[j] > pivot);
+      if (i >= j) return j;
+
+      const temp = list[i];
+      list[i] = list[j];
+      list[j] = temp;
     }
-    this.swap(listToSort, i + 1, high);
-    return i + 1;
   };
 
-  private swap = (listToSort: number[], i: number, j: number): void => {
-    [listToSort[i], listToSort[j]] = [listToSort[j], listToSort[i]];
-  };
-
-  private quickSortInternal = (listToSort: number[], low: number, high: number): void => {
+  private quickSortInternal = (list: number[], low: number, high: number): void => {
     if (low < high) {
-      const partitionIndex = this.partition(listToSort, low, high);
-      this.quickSortInternal(listToSort, low, partitionIndex - 1);
-      this.quickSortInternal(listToSort, partitionIndex + 1, high);
+      const p = this.partition(list, low, high);
+      this.quickSortInternal(list, low, p);
+      this.quickSortInternal(list, p + 1, high);
     }
   };
 
