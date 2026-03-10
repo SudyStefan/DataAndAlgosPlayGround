@@ -157,6 +157,7 @@ export const App = () => {
               {activeItem ? <AlgoItem algo={activeItem} /> : null}
             </DragOverlay>
           </DndContext>
+          <a href="https://github.com/SudyStefan/DataAndAlgosPlayGround">{">> GitHub Repo <<"}</a>
         </div>
         {benchmarkData.length > 0 && <PerformanceChart algos={selectedAlgos} data={benchmarkData} />}
       </div>
