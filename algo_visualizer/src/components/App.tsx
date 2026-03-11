@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
-import "../styles/App.css";
 import AlgoList from "./AlgoList";
 import type SortAlgorithm from "../algos/SortAlgorithm";
 import Bubble from "../algos/bubble";
 import Insertion from "../algos/insertion";
 import Selection from "../algos/selection";
 import Quick from "../algos/quick";
-import { DndContext, DragOverlay, closestCenter, defaultDropAnimationSideEffects } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  defaultDropAnimationSideEffects
+} from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import AlgoItem from "./AlgoItem";
 import { runBenchmarks, type BenchmarkDataPoint } from "../algos/runner";
 import PerformanceChart from "./PerformanceChart";
 import Merge from "../algos/merge";
+import { cn } from "../helpers/utils";
 
 export const App = () => {
   const [availableAlgos, setAvailableAlgos] = useState<SortAlgorithm[]>([]);
@@ -23,10 +28,18 @@ export const App = () => {
   const [maxN, setMaxN] = useState<number>(10000);
   const [intervals, setIntervals] = useState<number>(10);
 
-  const activeItem = [...availableAlgos, ...selectedAlgos].find((a) => a.name === activeId);
+  const activeItem = [...availableAlgos, ...selectedAlgos].find(
+    (a) => a.name === activeId
+  );
 
   useEffect(() => {
-    setAvailableAlgos([new Bubble(), new Insertion(), new Selection(), new Quick(), new Merge()]);
+    setAvailableAlgos([
+      new Bubble(),
+      new Insertion(),
+      new Selection(),
+      new Quick(),
+      new Merge()
+    ]);
   }, []);
 
   const moveAllToSelected = () => {
@@ -116,35 +129,98 @@ export const App = () => {
   };
 
   return (
-    <>
-      <div className="appRoot">
-        <div className="initContainer">
-          <h1 style={{ margin: "5px" }}>Algo Visualizer</h1>
+    <div className="min-h-screen w-full bg-stone-800">
+      <div
+        className={cn(
+          "grid mx-auto p-6 grid-cols-1",
+          benchmarkData.length > 0 ? "lg:grid-cols-3" : "",
+          "justify-items-center items-center min-h-screen"
+        )}
+      >
+        <div
+          className={cn(
+            "flex flex-col justify-center",
+            "items-center max-w-90 w-full",
+            benchmarkData.length > 0 ? "lg:col-span-1" : ""
+          )}
+        >
+          <h1 className="mx-2 text-slate-400 font-bold text-6xl cursor-default">
+            Algo Visualizer
+          </h1>
           <button
             onClick={handleRunBenchmark}
             disabled={isCalculating || selectedAlgos.length === 0}
-            className="runButton"
+            className={cn(
+              "bg-slate-700 w-full text-slate-300",
+              "font-medium text-2xl rounded-sm",
+              "py-2 my-2",
+              "hover:bg-slate-600 hover:cursor-pointer"
+            )}
           >
             {isCalculating ? "Calculating..." : "Run Benchmarks"}
           </button>
-          <div className="controls">
-            <div className="controlBlock">
-              <label>Max N:</label>
-              <input type="number" value={maxN} onChange={(e) => setMaxN(Number(e.target.value))} />
+          <div className="flex w-full flex-col border-teal-400 border-2 rounded-l-sm">
+            <div className="flex w-full text-slate-300 text-xl text-center">
+              <label className="basis-1/4 min-w-1/4 m-2">Max N:</label>
+              <input
+                className="basis-3/4 min-w-0 text-center bg-stone-700 py-2"
+                type="number"
+                value={maxN}
+                onChange={(e) => setMaxN(Number(e.target.value))}
+              />
             </div>
-            <div className="controlBlock">
-              <label>Intervals:</label>
-              <input type="number" value={intervals} onChange={(e) => setIntervals(Number(e.target.value))} />
+            <div className="flex w-full text-slate-300 text-xl text-center">
+              <label className="basis-1/4 min-w-1/4 m-2">Intervals:</label>
+              <input
+                className="basis-3/4 min-w-0 text-center bg-stone-700 py-2"
+                type="number"
+                value={intervals}
+                onChange={(e) => setIntervals(Number(e.target.value))}
+              />
             </div>
           </div>
-          <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
-            <div className="algoLists">
-              <AlgoList algos={availableAlgos} listId="available" listTitle="Available Algorithms"></AlgoList>
-              <div className="algoListTransferButtons">
-                <button onClick={moveAllToSelected}>{">"}</button>
-                <button onClick={moveAllToAvailable}>{"<"}</button>
+          <DndContext
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCenter}
+          >
+            <div
+              className={cn(
+                "flex w-full m-auto overflow-hidden",
+                "border-teal-400 border-2 rounded-l-sm",
+                "my-2"
+              )}
+            >
+              <AlgoList
+                algos={availableAlgos}
+                listId="available"
+                listTitle="Available"
+              ></AlgoList>
+              <div className="flex flex-col">
+                <button
+                  className={cn(
+                    "h-1/2 text-6xl p-1 bg-stone-700 text-slate-500 font-extrabold",
+                    "hover:bg-stone-600 hover:cursor-pointer"
+                  )}
+                  onClick={moveAllToSelected}
+                >
+                  {">"}
+                </button>
+                <button
+                  className={cn(
+                    "h-1/2 text-6xl p-1 bg-stone-700 text-slate-500 font-extrabold",
+                    "hover:bg-stone-600 hover:cursor-pointer"
+                  )}
+                  onClick={moveAllToAvailable}
+                >
+                  {"<"}
+                </button>
               </div>
-              <AlgoList algos={selectedAlgos} listId="selected" listTitle="Selected Algorithms"></AlgoList>
+              <AlgoList
+                algos={selectedAlgos}
+                listId="selected"
+                listTitle="Selected"
+              ></AlgoList>
             </div>
 
             <DragOverlay
@@ -157,10 +233,20 @@ export const App = () => {
               {activeItem ? <AlgoItem algo={activeItem} /> : null}
             </DragOverlay>
           </DndContext>
-          <a href="https://github.com/SudyStefan/DataAndAlgosPlayGround">{">> GitHub Repo <<"}</a>
+          <a
+            className="text-slate-500"
+            href="https://github.com/SudyStefan/DataAndAlgosPlayGround"
+          >
+            {">> GitHub Repo <<"}
+          </a>
         </div>
-        {benchmarkData.length > 0 && <PerformanceChart algos={selectedAlgos} data={benchmarkData} />}
+        {benchmarkData.length > 0 && (
+          <PerformanceChart
+            algos={selectedAlgos}
+            data={benchmarkData}
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 };
