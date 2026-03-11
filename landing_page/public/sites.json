@@ -3,13 +3,13 @@
     {
       "name": "Snek",
       "description": "Snake Game made in TypeScript",
-      "logoPath": "./snek/logo.png",
+      "logoName": "./snek.png",
       "indexPath": "./snek/index.html"
     },
     {
       "name": "Algo Visualizer",
       "description": "Charts the runtime of various Sorting Algorithms against each other",
-      "logoPath": "./algo_visualizer/logo.png",
+      "logoName": "./sort.png",
       "indexPath": "./algo_visualizer/index.html"
     }
   ]

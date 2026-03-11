@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
-import "../styles//App.css";
+import "../styles/App.css";
 import SiteCard from "./SiteCard";
 
 export type Site = {
   name: string;
   description: string;
-  logoPath: string;
+  logoName: string;
   indexPath: string;
 };
 
-function App() {
+type AppConfig = {
+  sites: Site[];
+};
+
+const App = () => {
   const [sites, setSites] = useState<Site[]>([]);
 
-  const loadConfig = async (): Promise<any> => {
+  const loadConfig = async (): Promise<AppConfig> => {
     const response = await fetch("./sites.json");
     if (!response.ok) {
       throw new Error("Failed to fetch sites.json!");
@@ -29,17 +33,19 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div className="siteContainer">
-        <h1>Available Apps</h1>
-        <div className="cardGrid">
+    <div className="flex min-h-screen min-w-screen items-center justify-center bg-stone-800">
+      <div className="flex-row">
+        <h1 className="pb-5 text-center text-5xl font-bold text-slate-400">
+          Available Apps
+        </h1>
+        <div className="mx-auto grid w-[90%] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-5">
           {sites.map((site) => (
             <SiteCard key={site.name} {...site} />
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default App;
