@@ -36,7 +36,7 @@ const App = () => {
       <h1 className="pb-5 text-center text-5xl font-bold text-slate-400">
         Available Apps
       </h1>
-      <div className="mx-auto grid w-[90%] grid-cols-[repeat(auto-fill,400px)] justify-center gap-5">
+      <div className="mx-auto grid w-[90%] grid-cols-[repeat(auto-fit,400px)] justify-center gap-5">
         {sites.map((site) => (
           <SiteCard key={site.name} {...site} />
         ))}
