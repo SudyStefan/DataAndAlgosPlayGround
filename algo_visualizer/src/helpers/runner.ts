@@ -1,14 +1,15 @@
-import type SortAlgorithm from "./SortAlgorithm";
+import type { Dispatch, SetStateAction } from "react";
+import type SortAlgorithm from "../algos/SortAlgorithm";
 
-export type BenchmarkDataPoint = {
-  n: number;
-  [algoName: string]: number;
-};
+export type BenchmarkDataPoint = { n: number; [algoName: string]: number };
+export type VisulizationData = { algoName: string; listToSort: number[] };
 
 const getMedian = (values: number[]): number => {
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 !== 0 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+  return sorted.length % 2 !== 0
+    ? sorted[middle]
+    : (sorted[middle - 1] + sorted[middle]) / 2;
 };
 
 const generateIntervals = (maxSize: number, intervals: number): number[] => {
@@ -43,7 +44,9 @@ export const runBenchmarks = async (
 
   for (const n of sizes) {
     const dataPoint: BenchmarkDataPoint = { n };
-    const baseArray = Array.from({ length: n }, () => Math.floor(Math.random() * 10000));
+    const baseArray = Array.from({ length: n }, () =>
+      Math.floor(Math.random() * 10000)
+    );
 
     for (const algo of selectedAlgos) {
       // warm up
@@ -63,3 +66,8 @@ export const runBenchmarks = async (
     await new Promise((r) => setTimeout(r, 0));
   }
 };
+
+export const runVisulization = async (
+  selectedAlgos: SortAlgorithm[],
+  updateListToSort: Dispatch<SetStateAction<VisulizationData[]>>
+) => {};

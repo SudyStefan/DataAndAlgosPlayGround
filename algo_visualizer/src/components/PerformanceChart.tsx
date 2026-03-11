@@ -1,4 +1,4 @@
-import type { BenchmarkDataPoint } from "../algos/runner";
+import type { BenchmarkDataPoint } from "../helpers/runner";
 import type SortAlgorithm from "../algos/SortAlgorithm";
 import {
   Line,

@@ -14,16 +14,25 @@ import {
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import AlgoItem from "./AlgoItem";
-import { runBenchmarks, type BenchmarkDataPoint } from "../algos/runner";
+import {
+  runBenchmarks,
+  runVisulization,
+  type BenchmarkDataPoint,
+  type VisulizationData
+} from "../helpers/runner";
 import PerformanceChart from "./PerformanceChart";
 import Merge from "../algos/merge";
 import { cn } from "../helpers/utils";
+import VisualizerView from "./VisualizerView";
 
 export const App = () => {
   const [availableAlgos, setAvailableAlgos] = useState<SortAlgorithm[]>([]);
   const [selectedAlgos, setSelectedAlgos] = useState<SortAlgorithm[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [benchmarkData, setBenchmarkData] = useState<BenchmarkDataPoint[]>([]);
+  const [visulizationData, setVisulizationData] = useState<VisulizationData[]>(
+    []
+  );
   const [isCalculating, setIsCalculating] = useState(false);
   const [maxN, setMaxN] = useState<number>(10000);
   const [intervals, setIntervals] = useState<number>(10);
@@ -116,16 +125,20 @@ export const App = () => {
       alert("Please enter values greater than zero.");
       return;
     }
-
     setIsCalculating(true);
     setBenchmarkData([]);
 
-    // Pass the user-defined values into the runner
     await runBenchmarks(selectedAlgos, maxN, intervals, (newDataPoint) => {
       setBenchmarkData((prev) => [...prev, newDataPoint]);
     });
 
     setIsCalculating(false);
+  };
+
+  const handleRunVisulization = async () => {
+    setIsCalculating(true);
+
+    await runVisulization(selectedAlgos, setVisulizationData);
   };
 
   return (
@@ -158,6 +171,18 @@ export const App = () => {
             )}
           >
             {isCalculating ? "Calculating..." : "Run Benchmarks"}
+          </button>
+          <button
+            onClick={handleRunVisulization}
+            disabled={isCalculating || selectedAlgos.length === 0}
+            className={cn(
+              "bg-slate-700 w-full text-slate-300",
+              "font-medium text-2xl rounded-sm",
+              "py-2 mb-2",
+              "hover:bg-slate-600 hover:cursor-pointer"
+            )}
+          >
+            {isCalculating ? "Calculating..." : "Run Visulization"}
           </button>
           <div className="flex w-full flex-col border-teal-400 border-2 rounded-l-sm">
             <div className="flex w-full text-slate-300 text-xl text-center">
@@ -246,6 +271,7 @@ export const App = () => {
             data={benchmarkData}
           />
         )}
+        {visulizationData.length > 0 && <VisualizerView tbd="bla" />}
       </div>
     </div>
   );
